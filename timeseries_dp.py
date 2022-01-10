@@ -9,9 +9,12 @@ from copy import deepcopy
 from multiprocessing import Pool, freeze_support
 
 args = Namespace(
-    original_file = '../data/processed/split_dp_log_result/processed/0_noise.csv',
-    output_file = '../data/processed/211108_outputs/10000_noise.csv',
-    epsilon = 10000
+    original_file = 'original file name',
+    output_file = 'output file name',
+    epsilon = 'choose epsilon between 0.1 ~ 10000',
+    index = 'person_index',
+    columns = 'timeline column name',
+    variable = 'variable you want to synthesize'
 )
 
 
@@ -28,7 +31,7 @@ max_timestep = raw_timeseries.month.max()
 
 #%%
 ## 2. change the DataFrame. use pivot table. save the Na information
-df = deepcopy(raw_timeseries.pivot_table(index='PT_SBST_NO', columns = "month", values='CEA'))
+df = deepcopy(raw_timeseries.pivot_table(index=args.index, columns = args.columns, values=args.variable))
 df_frame = deepcopy(df) # for every iterations we are going to fill this frame
 na_information = ~df.isna()
 original_idx = df.columns
@@ -164,12 +167,12 @@ df_frame = df_frame[na_information]
 df_frame = df_frame.reset_index()
 
 # df_Frame melt. raw_timeseries 형태로
-df_frame = pd.melt(df_frame, id_vars='PT_SBST_NO',
+df_frame = pd.melt(df_frame, id_vars=args.index,
         value_vars=list(df_frame.columns[1:]),
-        var_name='month',
-        value_name='CEA')
+        var_name=args.columns,
+        value_name=args.variable)
 df_frame = df_frame.dropna().reset_index(drop=True)
-df_frame.columns = ['PT_SBST_NO','month','CEA']
+df_frame.columns = [args.index, args.columns, args.variable]
 df_frame.to_csv(args.output_file, header=True, index=False, sep=',')
 # %%
 print('finished..!')
