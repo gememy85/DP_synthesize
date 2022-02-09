@@ -1,4 +1,4 @@
-# DP_synthesize
+# Timeseries_Synthesis_DP
 
 ## Introduction
 - 본 코드는 데이터 합성을 위한 코드로서, 특히 로컬-차분프라이버시 모델을 활용하여 시계열 데이터 합성을 하게 하기 위한 코드입니다.
